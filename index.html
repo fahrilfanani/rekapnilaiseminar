@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekap Penilaian Tugas Akhir Terpadu</title>
+    <title>Sistem Penilaian Tugas Akhir</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,398 +11,387 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+            background-color: #F8FAFC;
+            background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+            background-size: 24px 24px;
         }
         
-        /* Utility Classes */
-        .hidden-view {
-            display: none !important;
-        }
-        
-        /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #F3F4F6;
-            border-radius: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #CBD5E1;
-            border-radius: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background-color: #94A3B8;
+        /* Utility untuk menyembunyikan element */
+        .hidden { display: none; }
+
+        /* Transisi halus */
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Styling Input Angka */
-        .input-nilai {
-            width: 100%;
-            min-width: 80px;
-            padding: 12px 8px;
-            border-radius: 10px;
-            border: 2px solid #E5E7EB;
-            text-align: center;
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: #374151;
-            transition: all 0.2s ease;
-            background-color: #F9FAFB;
+        /* Input styling */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
         }
-        .input-nilai:focus {
-            outline: none;
-            border-color: #6366F1;
-            background-color: #FFFFFF;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
-        }
-        .input-nilai.error {
-            border-color: #EF4444;
-            background-color: #FEF2F2;
-            color: #EF4444;
-        }
-        
-        .input-nilai::-webkit-outer-spin-button,
-        .input-nilai::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input[type=number] { -moz-appearance: textfield; }
 
-        /* Sticky Columns */
-        th, td { white-space: nowrap; }
-        .sticky-col {
-            position: sticky;
-            left: 0;
-            z-index: 10;
-            background-color: inherit;
-        }
-        .sticky-col::after {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; width: 6px;
-            background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
-            pointer-events: none;
-        }
+        /* Glass Headers */
+        .header-home { background: linear-gradient(135deg, #0F172A 0%, #334155 100%); }
+        .header-prata { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); } /* Indigo/Purple */
+        .header-pendadaran { background: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%); } /* Blue/Sky */
 
-        /* Card Animation */
-        .menu-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-6 px-3 sm:px-6">
+<body class="text-slate-600 min-h-screen py-8 px-4 sm:px-6 lg:px-8 flex flex-col">
 
-    <!-- ================= VIEW 1: BERANDA / HOME ================= -->
-    <div id="view-home" class="w-full max-w-5xl flex flex-col items-center justify-center min-h-[80vh] animate-fade-in">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-800 mb-4 tracking-tight">
-                Rekap Penilaian <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Seminar & Pendadaran</span>
-            </h1>
-            <p class="text-lg text-gray-500 max-w-2xl mx-auto">
-                Silakan pilih jenis penilaian yang akan dilakukan.
-            </p>
+    <div class="max-w-[85rem] mx-auto w-full flex-grow">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <div id="home-view" class="fade-in max-w-4xl mx-auto py-10">
+            <div class="text-center mb-12 space-y-4">
+                <div class="inline-block p-3 rounded-2xl bg-white shadow-sm mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-800 tracking-tight">Sistem Penilaian <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Tugas Akhir</span></h1>
+                <p class="text-lg text-slate-500 max-w-xl mx-auto">Silakan pilih jenis sidang yang akan dinilai untuk memulai perhitungan skor.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4">
+                <!-- Menu Pra-TA -->
+                <button onclick="switchView('prata')" class="group card-hover bg-white rounded-3xl p-8 border border-slate-100 shadow-xl shadow-slate-200/50 text-left relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-8 -mt-8 group-hover:bg-indigo-100 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">Seminar Pra-TA</h2>
+                        <p class="text-slate-500 text-sm mb-6">Penilaian proposal, format penulisan, substansi awal, dan kesiapan materi.</p>
+                        <span class="inline-flex items-center text-sm font-semibold text-indigo-600">
+                            Mulai Penilaian 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Menu Pendadaran -->
+                <button onclick="switchView('pendadaran')" class="group card-hover bg-white rounded-3xl p-8 border border-slate-100 shadow-xl shadow-slate-200/50 text-left relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-8 -mt-8 group-hover:bg-blue-100 transition-colors"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">Sidang Pendadaran</h2>
+                        <p class="text-slate-500 text-sm mb-6">Penilaian akhir skripsi meliputi hasil/produk, penguasaan materi, dan sikap.</p>
+                        <span class="inline-flex items-center text-sm font-semibold text-blue-600">
+                            Mulai Penilaian 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </span>
+                    </div>
+                </button>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full px-4">
-            <!-- Menu 1: Pra-TA -->
-            <div onclick="switchView('view-prata')" class="menu-card bg-white rounded-3xl p-8 cursor-pointer border border-gray-100 shadow-xl group relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+
+        <!-- ================= PRA-TA VIEW ================= -->
+        <div id="prata-view" class="hidden space-y-6 fade-in">
+            <!-- Header w/ Back Button -->
+            <div class="header-prata rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-200 relative overflow-hidden flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div class="relative z-10">
-                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">Seminar Pra-TA</h2>
-                    <p class="text-gray-500">Kalkulator penilaian untuk seminar proposal/pra-tugas akhir.</p>
-                    <div class="mt-6 flex items-center text-blue-600 font-semibold">
-                        Buka Kalkulator
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                    </div>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Seminar Pra-TA</h1>
+                    <p class="text-indigo-100 text-base sm:text-lg opacity-90">Kalkulator Penilaian Proposal</p>
                 </div>
+                <button onclick="goHome()" class="relative z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali
+                </button>
+                <!-- Decor -->
+                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
             </div>
 
-            <!-- Menu 2: Pendadaran -->
-            <div onclick="switchView('view-pendadaran')" class="menu-card bg-white rounded-3xl p-8 cursor-pointer border border-gray-100 shadow-xl group relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
-                <div class="relative z-10">
-                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <!-- Input Table -->
+                <div class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                        <button onclick="resetForm('prata')" class="text-sm text-slate-400 hover:text-red-500 font-medium transition-colors">Reset Form</button>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors">Sidang Pendadaran</h2>
-                    <p class="text-gray-500">Kalkulator penilaian untuk sidang akhir/pendadaran skripsi.</p>
-                    <div class="mt-6 flex items-center text-indigo-600 font-semibold">
-                        Buka Kalkulator
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mt-12 text-center text-gray-400 text-sm">created by fanani@2025</div>
-    </div>
-
-
-    <!-- ================= VIEW 2: SEMINAR PRA-TA ================= -->
-    <div id="view-prata" class="w-full max-w-[90rem] hidden-view">
-        <!-- Back Button -->
-        <button onclick="switchView('view-home')" class="mb-6 flex items-center text-gray-500 hover:text-blue-600 transition-colors font-semibold bg-white px-4 py-2 rounded-lg shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Kembali ke Beranda
-        </button>
-
-        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
-            <!-- Header Pra-TA -->
-            <div class="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 sm:p-12 text-white text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"><svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" /></svg></div>
-                <h1 class="text-3xl sm:text-5xl font-extrabold relative z-10">Rekap Nilai Seminar Pra-TA</h1>
-                <p class="text-blue-100 mt-3 text-lg font-medium relative z-10">Masukkan nilai indikator (0-100).</p>
-            </div>
-
-            <div class="p-4 sm:p-8">
-                <!-- Tabel Pra-TA -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10">
-                    <div class="overflow-x-auto custom-scrollbar pb-4">
-                        <table class="w-full text-base sm:text-lg text-left">
-                            <thead class="text-sm sm:text-base text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th class="px-6 py-5 sticky-col bg-gray-50 font-bold text-gray-700">Komponen</th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Format <br><span class="text-blue-500 text-xs bg-blue-50 px-3 py-1 rounded-full font-bold">10%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Substansi <br><span class="text-blue-500 text-xs bg-blue-50 px-3 py-1 rounded-full font-bold">30%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Penguasaan <br><span class="text-blue-500 text-xs bg-blue-50 px-3 py-1 rounded-full font-bold">40%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Sikap <br><span class="text-blue-500 text-xs bg-blue-50 px-3 py-1 rounded-full font-bold">20%</span></th>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-sm uppercase text-slate-500 font-semibold border-b border-slate-100">
+                                    <th class="p-4 w-36 sticky left-0 bg-slate-50 z-10">Komponen</th>
+                                    <th class="p-4 text-center">Format<br><span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">10%</span></th>
+                                    <th class="p-4 text-center">Substansi<br><span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">30%</span></th>
+                                    <th class="p-4 text-center">Materi<br><span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">40%</span></th>
+                                    <th class="p-4 text-center">Sikap<br><span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">20%</span></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <!-- Isi Baris (Generated by JS Logic but defined statically here for control) -->
-                                <!-- Penguji 1 -->
-                                <tr class="hover:bg-blue-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-blue-50/30">Penguji 1</td>
-                                    <td class="p-3"><input type="number" id="pra-p1-format" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p1-substansi" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p1-penguasaan" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p1-sikap" class="input-nilai input-pra" placeholder="0"></td>
-                                </tr>
-                                <!-- Penguji 2 -->
-                                <tr class="hover:bg-blue-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-blue-50/30">Penguji 2</td>
-                                    <td class="p-3"><input type="number" id="pra-p2-format" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p2-substansi" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p2-penguasaan" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p2-sikap" class="input-nilai input-pra" placeholder="0"></td>
-                                </tr>
-                                <!-- Penguji 3 -->
-                                <tr class="hover:bg-blue-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-blue-50/30">Penguji 3</td>
-                                    <td class="p-3"><input type="number" id="pra-p3-format" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p3-substansi" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p3-penguasaan" class="input-nilai input-pra" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pra-p3-sikap" class="input-nilai input-pra" placeholder="0"></td>
-                                </tr>
-                                <!-- Rata-rata -->
-                                <tr class="bg-gray-50 font-semibold text-gray-600 border-t-2">
-                                    <td class="px-6 py-4 sticky-col bg-gray-50">Rata-rata</td>
-                                    <td id="pra-avg-format" class="text-center">-</td>
-                                    <td id="pra-avg-substansi" class="text-center">-</td>
-                                    <td id="pra-avg-penguasaan" class="text-center">-</td>
-                                    <td id="pra-avg-sikap" class="text-center">-</td>
-                                </tr>
-                                <!-- Nilai Terbobot -->
-                                <tr class="bg-blue-50/50 text-blue-900 font-extrabold border-t border-blue-100">
-                                    <td class="px-6 py-5 sticky-col bg-blue-50/50">TERBOBOT</td>
-                                    <td id="pra-weighted-format" class="text-center text-xl">-</td>
-                                    <td id="pra-weighted-substansi" class="text-center text-xl">-</td>
-                                    <td id="pra-weighted-penguasaan" class="text-center text-xl">-</td>
-                                    <td id="pra-weighted-sikap" class="text-center text-xl">-</td>
-                                </tr>
+                            <tbody class="text-base divide-y divide-slate-50" id="prata-tbody">
+                                <!-- Generated by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Hasil Akhir Pra-TA -->
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
-                        <span class="text-sm font-bold text-gray-500 uppercase">Nilai Angka</span>
-                        <p id="pra-final-angka" class="text-5xl font-extrabold text-gray-800 mt-2">-</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-cyan-500"></div>
-                        <span class="text-sm font-bold text-gray-500 uppercase">Nilai Huruf</span>
-                        <p id="pra-final-huruf" class="text-5xl font-extrabold text-gray-800 mt-2">-</p>
-                    </div>
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center justify-center">
-                        <span class="text-sm font-bold text-gray-500 uppercase">Status</span>
-                        <p id="pra-final-keterangan" class="text-4xl font-extrabold text-gray-400 mt-2 px-8 py-2 rounded-xl transition-all">-</p>
+                <!-- Result -->
+                <div class="xl:col-span-1 space-y-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 relative overflow-hidden text-center">
+                        <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Nilai Akhir</p>
+                        <p id="prata-final-angka" class="text-6xl font-bold text-slate-800 mt-3">-</p>
+                        <div class="mt-6 flex justify-center gap-4">
+                            <div class="bg-slate-50 rounded-xl px-4 py-3 w-1/2">
+                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
+                                <p id="prata-final-huruf" class="text-2xl font-bold text-slate-600">-</p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl px-4 py-3 w-1/2">
+                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
+                                <p id="prata-final-keterangan" class="text-2xl font-bold text-slate-600">-</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="flex justify-center pb-8">
-                    <button onclick="resetPraTA()" class="px-10 py-4 rounded-full bg-white text-gray-600 font-bold border hover:text-red-500 hover:shadow-lg transition-all">Reset Data</button>
-                </div>
-
-                <!-- Footer -->
-                <div class="mt-8 text-center text-sm text-gray-400 pb-6">created by fanani@2025</div>
             </div>
         </div>
-    </div>
 
 
-    <!-- ================= VIEW 3: PENDADARAN TA ================= -->
-    <div id="view-pendadaran" class="w-full max-w-[90rem] hidden-view">
-        <!-- Back Button -->
-        <button onclick="switchView('view-home')" class="mb-6 flex items-center text-gray-500 hover:text-indigo-600 transition-colors font-semibold bg-white px-4 py-2 rounded-lg shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Kembali ke Beranda
-        </button>
-
-        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
-            <!-- Header Pendadaran -->
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 sm:p-12 text-white text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"><svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" /></svg></div>
-                <h1 class="text-3xl sm:text-5xl font-extrabold relative z-10">Rekap Nilai Pendadaran TA</h1>
-                <p class="text-indigo-100 mt-3 text-lg font-medium relative z-10">Masukkan nilai indikator (0-100).</p>
+        <!-- ================= PENDADARAN VIEW ================= -->
+        <div id="pendadaran-view" class="hidden space-y-6 fade-in">
+             <!-- Header w/ Back Button -->
+             <div class="header-pendadaran rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-blue-200 relative overflow-hidden flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="relative z-10">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Sidang Pendadaran</h1>
+                    <p class="text-blue-100 text-base sm:text-lg opacity-90">Kalkulator Penilaian Akhir</p>
+                </div>
+                <button onclick="goHome()" class="relative z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali
+                </button>
+                 <!-- Decor -->
+                 <div class="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
             </div>
 
-            <div class="p-4 sm:p-8">
-                <!-- Tabel Pendadaran -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10">
-                    <div class="overflow-x-auto custom-scrollbar pb-4">
-                        <table class="w-full text-base sm:text-lg text-left">
-                            <thead class="text-sm sm:text-base text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
-                                <tr>
-                                    <th class="px-6 py-5 sticky-col bg-gray-50 font-bold text-gray-700">Komponen</th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Format <br><span class="text-indigo-500 text-xs bg-indigo-50 px-3 py-1 rounded-full font-bold">10%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Substansi <br><span class="text-indigo-500 text-xs bg-indigo-50 px-3 py-1 rounded-full font-bold">20%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Penguasaan <br><span class="text-indigo-500 text-xs bg-indigo-50 px-3 py-1 rounded-full font-bold">30%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Sikap <br><span class="text-indigo-500 text-xs bg-indigo-50 px-3 py-1 rounded-full font-bold">20%</span></th>
-                                    <th class="px-5 py-4 text-center min-w-[120px]">Hasil <br><span class="text-indigo-500 text-xs bg-indigo-50 px-3 py-1 rounded-full font-bold">20%</span></th>
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                <!-- Input Table -->
+                <div class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                        <button onclick="resetForm('pendadaran')" class="text-sm text-slate-400 hover:text-red-500 font-medium transition-colors">Reset Form</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="bg-slate-50 text-sm uppercase text-slate-500 font-semibold border-b border-slate-100">
+                                    <th class="p-4 w-36 sticky left-0 bg-slate-50 z-10">Komponen</th>
+                                    <th class="p-4 text-center">Format<br><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">10%</span></th>
+                                    <th class="p-4 text-center">Substansi<br><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">20%</span></th>
+                                    <th class="p-4 text-center">Materi<br><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">30%</span></th>
+                                    <th class="p-4 text-center">Sikap<br><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">20%</span></th>
+                                    <th class="p-4 text-center">Hasil<br><span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">20%</span></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <!-- Penguji 1 -->
-                                <tr class="hover:bg-indigo-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-indigo-50/30">Penguji 1</td>
-                                    <td class="p-3"><input type="number" id="pen-p1-format" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p1-substansi" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p1-penguasaan" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p1-sikap" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p1-hasil" class="input-nilai input-pen" placeholder="0"></td>
-                                </tr>
-                                <!-- Penguji 2 -->
-                                <tr class="hover:bg-indigo-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-indigo-50/30">Penguji 2</td>
-                                    <td class="p-3"><input type="number" id="pen-p2-format" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p2-substansi" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p2-penguasaan" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p2-sikap" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p2-hasil" class="input-nilai input-pen" placeholder="0"></td>
-                                </tr>
-                                <!-- Penguji 3 -->
-                                <tr class="hover:bg-indigo-50/30 transition-colors bg-white group">
-                                    <td class="px-6 py-5 font-bold text-gray-800 sticky-col bg-white group-hover:bg-indigo-50/30">Penguji 3</td>
-                                    <td class="p-3"><input type="number" id="pen-p3-format" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p3-substansi" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p3-penguasaan" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p3-sikap" class="input-nilai input-pen" placeholder="0"></td>
-                                    <td class="p-3"><input type="number" id="pen-p3-hasil" class="input-nilai input-pen" placeholder="0"></td>
-                                </tr>
-                                <!-- Rata-rata -->
-                                <tr class="bg-gray-50 font-semibold text-gray-600 border-t-2">
-                                    <td class="px-6 py-4 sticky-col bg-gray-50">Rata-rata</td>
-                                    <td id="pen-avg-format" class="text-center">-</td>
-                                    <td id="pen-avg-substansi" class="text-center">-</td>
-                                    <td id="pen-avg-penguasaan" class="text-center">-</td>
-                                    <td id="pen-avg-sikap" class="text-center">-</td>
-                                    <td id="pen-avg-hasil" class="text-center">-</td>
-                                </tr>
-                                <!-- Nilai Terbobot -->
-                                <tr class="bg-indigo-50/50 text-indigo-900 font-extrabold border-t border-indigo-100">
-                                    <td class="px-6 py-5 sticky-col bg-indigo-50/50">TERBOBOT</td>
-                                    <td id="pen-weighted-format" class="text-center text-xl">-</td>
-                                    <td id="pen-weighted-substansi" class="text-center text-xl">-</td>
-                                    <td id="pen-weighted-penguasaan" class="text-center text-xl">-</td>
-                                    <td id="pen-weighted-sikap" class="text-center text-xl">-</td>
-                                    <td id="pen-weighted-hasil" class="text-center text-xl">-</td>
-                                </tr>
+                            <tbody class="text-base divide-y divide-slate-50" id="pendadaran-tbody">
+                                <!-- Generated by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Hasil Akhir Pendadaran -->
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-indigo-500"></div>
-                        <span class="text-sm font-bold text-gray-500 uppercase">Nilai Angka</span>
-                        <p id="pen-final-angka" class="text-5xl font-extrabold text-gray-800 mt-2">-</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-2 h-full bg-purple-500"></div>
-                        <span class="text-sm font-bold text-gray-500 uppercase">Nilai Huruf</span>
-                        <p id="pen-final-huruf" class="text-5xl font-extrabold text-gray-800 mt-2">-</p>
-                    </div>
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center justify-center">
-                        <span class="text-sm font-bold text-gray-500 uppercase">Status</span>
-                        <p id="pen-final-keterangan" class="text-4xl font-extrabold text-gray-400 mt-2 px-8 py-2 rounded-xl transition-all">-</p>
+                 <!-- Result -->
+                 <div class="xl:col-span-1 space-y-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 relative overflow-hidden text-center">
+                        <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Nilai Akhir</p>
+                        <p id="pendadaran-final-angka" class="text-6xl font-bold text-slate-800 mt-3">-</p>
+                        <div class="mt-6 flex justify-center gap-4">
+                            <div class="bg-slate-50 rounded-xl px-4 py-3 w-1/2">
+                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
+                                <p id="pendadaran-final-huruf" class="text-2xl font-bold text-slate-600">-</p>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl px-4 py-3 w-1/2">
+                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
+                                <p id="pendadaran-final-keterangan" class="text-2xl font-bold text-slate-600">-</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="flex justify-center pb-8">
-                    <button onclick="resetPendadaran()" class="px-10 py-4 rounded-full bg-white text-gray-600 font-bold border hover:text-red-500 hover:shadow-lg transition-all">Reset Data</button>
-                </div>
-
-                <!-- Footer -->
-                <div class="mt-8 text-center text-sm text-gray-400 pb-6">created by fanani@2025</div>
             </div>
         </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center py-6 mt-auto">
+        <p class="text-xs text-slate-400 font-medium">© 2025 Academic System • Designed by Fanani</p>
     </div>
 
     <script>
-        // --- LOGIKA GLOBAL & NAVIGASI ---
-        function switchView(viewId) {
-            // Sembunyikan semua view
-            document.getElementById('view-home').classList.add('hidden-view');
-            document.getElementById('view-prata').classList.add('hidden-view');
-            document.getElementById('view-pendadaran').classList.add('hidden-view');
-            
-            // Tampilkan view yang dipilih
-            const target = document.getElementById(viewId);
-            target.classList.remove('hidden-view');
-            
-            // Scroll ke atas
-            window.scrollTo(0, 0);
+        // --- DATA CONFIGURATION ---
+        const CONFIG = {
+            prata: {
+                bobot: { format: 0.10, substansi: 0.30, penguasaan: 0.40, sikap: 0.20 },
+                komponen: ['format', 'substansi', 'penguasaan', 'sikap'],
+                color: 'indigo'
+            },
+            pendadaran: {
+                bobot: { format: 0.10, substansi: 0.20, penguasaan: 0.30, sikap: 0.20, hasil: 0.20 },
+                komponen: ['format', 'substansi', 'penguasaan', 'sikap', 'hasil'],
+                color: 'blue'
+            }
+        };
+
+        // --- INIT & RENDER ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable('prata');
+            renderTable('pendadaran');
+        });
+
+        function renderTable(type) {
+            const tbody = document.getElementById(`${type}-tbody`);
+            const conf = CONFIG[type];
+            let html = '';
+
+            // 3 Evaluators
+            for(let i=1; i<=3; i++) {
+                html += `<tr class="hover:bg-slate-50 transition-colors group">
+                    <td class="p-3 font-semibold text-slate-700 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-${conf.color}-100 text-${conf.color}-600 flex items-center justify-center font-bold text-xs">P${i}</div>
+                            <span class="text-base">Penguji ${i}</span>
+                        </div>
+                    </td>`;
+                
+                conf.komponen.forEach(k => {
+                    html += `<td class="p-2"><input type="number" min="0" max="100" id="${type}-p${i}-${k}" class="input-nilai w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-center font-medium text-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-${conf.color}-500 focus:bg-white transition-all" placeholder="0" oninput="hitung('${type}')"></td>`;
+                });
+                html += `</tr>`;
+            }
+
+            // Summary Rows
+            html += `<tr class="bg-${conf.color}-50/50 font-semibold text-slate-600 border-t border-slate-100 text-lg">
+                <td class="p-3 sticky left-0 bg-${conf.color}-50/10">Rata-rata</td>`;
+            conf.komponen.forEach(k => html += `<td class="p-3 text-center" id="${type}-avg-${k}">-</td>`);
+            html += `</tr>`;
+
+            html += `<tr class="bg-${conf.color}-50 text-${conf.color}-700 font-bold border-t border-${conf.color}-100 text-xl">
+                <td class="p-3 sticky left-0 bg-${conf.color}-50">Nilai x Bobot</td>`;
+            conf.komponen.forEach(k => html += `<td class="p-3 text-center" id="${type}-weighted-${k}">-</td>`);
+            html += `</tr>`;
+
+            tbody.innerHTML = html;
         }
 
-        function validateInput(input) {
-            let val = parseFloat(input.value);
-            if (val > 100) {
-                input.classList.add('error');
-                return 100;
-            } else if (val < 0) {
-                input.classList.add('error');
-                return 0;
-            } else {
-                input.classList.remove('error');
-                return val;
+        // --- NAVIGATION ---
+        function switchView(viewName) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('prata-view').classList.add('hidden');
+            document.getElementById('pendadaran-view').classList.add('hidden');
+            
+            document.getElementById(`${viewName}-view`).classList.remove('hidden');
+            // Re-trigger animation
+            document.getElementById(`${viewName}-view`).classList.remove('fade-in');
+            void document.getElementById(`${viewName}-view`).offsetWidth; // trigger reflow
+            document.getElementById(`${viewName}-view`).classList.add('fade-in');
+            
+            window.scrollTo(0,0);
+        }
+
+        function goHome() {
+            switchView('home');
+        }
+
+        // --- CALCULATION LOGIC ---
+        function hitung(type) {
+            const conf = CONFIG[type];
+            const avg = {};
+            const weighted = {};
+
+            conf.komponen.forEach(komp => {
+                let sum = 0;
+                let validCount = 0;
+                let allFilled = true;
+
+                for(let i=1; i<=3; i++) {
+                    const el = document.getElementById(`${type}-p${i}-${komp}`);
+                    let val = parseFloat(el.value);
+                    
+                    // Validation 0-100
+                    if(val > 100) { val = 100; el.value = 100; }
+                    if(val < 0) { val = 0; el.value = 0; }
+
+                    if(!isNaN(val)) {
+                        sum += val;
+                        validCount++;
+                    } else {
+                        allFilled = false;
+                    }
+                }
+
+                const avgEl = document.getElementById(`${type}-avg-${komp}`);
+                const wEl = document.getElementById(`${type}-weighted-${komp}`);
+
+                if(allFilled) {
+                    const rata = sum / 3;
+                    avg[komp] = rata;
+                    weighted[komp] = rata * conf.bobot[komp];
+                    
+                    avgEl.textContent = rata.toFixed(2);
+                    wEl.textContent = weighted[komp].toFixed(2);
+                } else {
+                    avg[komp] = null;
+                    weighted[komp] = null;
+                    avgEl.textContent = '-';
+                    wEl.textContent = '-';
+                }
+            });
+
+            // Final Calc
+            let finalScore = 0;
+            let isComplete = true;
+            conf.komponen.forEach(k => {
+                if(weighted[k] !== null) finalScore += weighted[k];
+                else isComplete = false;
+            });
+
+            updateResultUI(type, isComplete ? finalScore : null);
+        }
+
+        function updateResultUI(type, score) {
+            const elAngka = document.getElementById(`${type}-final-angka`);
+            const elHuruf = document.getElementById(`${type}-final-huruf`);
+            const elKet = document.getElementById(`${type}-final-keterangan`);
+
+            if(score === null) {
+                elAngka.textContent = '-';
+                elHuruf.textContent = '-';
+                elHuruf.className = "text-2xl font-bold text-slate-600";
+                elKet.textContent = '-';
+                elKet.className = "text-2xl font-bold text-slate-600";
+                return;
             }
+
+            elAngka.textContent = score.toFixed(2);
+            elHuruf.textContent = konversiKeHuruf(score);
+            
+            const isLulus = score >= 31; // Passing grade threshold
+            elKet.textContent = isLulus ? "LULUS" : "TIDAK LULUS";
+            elKet.className = `text-2xl font-bold ${isLulus ? 'text-emerald-600' : 'text-rose-600'}`;
+            elHuruf.className = `text-2xl font-bold ${isLulus ? 'text-emerald-600' : 'text-rose-600'}`;
         }
 
         function konversiKeHuruf(nilai) {
-            if (nilai === null || isNaN(nilai)) return "-";
             if (nilai >= 81) return "A";
             if (nilai >= 76) return "A-";
             if (nilai >= 71) return "B+";
@@ -410,156 +399,16 @@
             if (nilai >= 56) return "B-";
             if (nilai >= 51) return "C+";
             if (nilai >= 41) return "C";
-            if (nilai >= 31) return "D";
+            if (nilai >= 31) return "C-";
+            if (nilai >= 21) return "D";
             return "E";
         }
 
-        function getKeterangan(nilai) {
-            if (nilai === null || isNaN(nilai)) return { text: "-", class: "text-gray-400" };
-            if (nilai >= 56) return { text: "LULUS", class: "text-green-700 bg-green-100" };
-            return { text: "TIDAK LULUS", class: "text-red-700 bg-red-100" };
+        function resetForm(type) {
+            const inputs = document.querySelectorAll(`input[id^="${type}-"]`);
+            inputs.forEach(i => i.value = '');
+            hitung(type);
         }
-
-        // --- LOGIKA PRA-TA ---
-        const PRA_BOBOT = { format: 0.10, substansi: 0.30, penguasaan: 0.40, sikap: 0.20 };
-        const PRA_KOMPONEN = ['format', 'substansi', 'penguasaan', 'sikap'];
-
-        function hitungPraTA() {
-            const avg = {};
-            const weighted = {};
-            
-            PRA_KOMPONEN.forEach(komp => {
-                const i1 = document.getElementById(`pra-p1-${komp}`);
-                const i2 = document.getElementById(`pra-p2-${komp}`);
-                const i3 = document.getElementById(`pra-p3-${komp}`);
-                
-                // Validasi & Ambil Nilai
-                let v1 = i1.value === "" ? null : validateInput(i1);
-                let v2 = i2.value === "" ? null : validateInput(i2);
-                let v3 = i3.value === "" ? null : validateInput(i3);
-
-                // Hitung Rata-rata per kolom
-                let sum = (v1 || 0) + (v2 || 0) + (v3 || 0);
-                
-                if (i1.value !== "" || i2.value !== "" || i3.value !== "") {
-                    let rataRata = sum / 3;
-                    avg[komp] = rataRata;
-                    weighted[komp] = rataRata * PRA_BOBOT[komp];
-                    
-                    document.getElementById(`pra-avg-${komp}`).textContent = rataRata.toFixed(2);
-                    let wEl = document.getElementById(`pra-weighted-${komp}`);
-                    wEl.textContent = weighted[komp].toFixed(2);
-                    wEl.classList.add('text-blue-700');
-                } else {
-                    avg[komp] = 0;
-                    weighted[komp] = 0;
-                    document.getElementById(`pra-avg-${komp}`).textContent = '-';
-                    document.getElementById(`pra-weighted-${komp}`).textContent = '-';
-                }
-            });
-
-            // Hitung Final
-            const inputs = document.querySelectorAll('.input-pra');
-            const adaInput = Array.from(inputs).some(i => i.value !== "");
-            
-            if (adaInput) {
-                const total = PRA_KOMPONEN.reduce((sum, komp) => sum + weighted[komp], 0);
-                document.getElementById('pra-final-angka').textContent = total.toFixed(2);
-                document.getElementById('pra-final-huruf').textContent = konversiKeHuruf(total);
-                
-                const ket = getKeterangan(total);
-                const ketEl = document.getElementById('pra-final-keterangan');
-                ketEl.textContent = ket.text;
-                ketEl.className = `text-4xl font-extrabold mt-2 px-8 py-2 rounded-xl transition-all ${ket.class}`;
-            } else {
-                document.getElementById('pra-final-angka').textContent = '-';
-                document.getElementById('pra-final-huruf').textContent = '-';
-                document.getElementById('pra-final-keterangan').textContent = '-';
-                document.getElementById('pra-final-keterangan').className = "text-4xl font-extrabold text-gray-400 mt-2 px-8 py-2 rounded-xl transition-all";
-            }
-        }
-
-        function resetPraTA() {
-            document.querySelectorAll('.input-pra').forEach(i => { i.value = ''; i.classList.remove('error'); });
-            hitungPraTA();
-        }
-
-        // --- LOGIKA PENDADARAN ---
-        const PEN_BOBOT = { format: 0.10, substansi: 0.20, penguasaan: 0.30, sikap: 0.20, hasil: 0.20 };
-        const PEN_KOMPONEN = ['format', 'substansi', 'penguasaan', 'sikap', 'hasil'];
-
-        function hitungPendadaran() {
-            const avg = {};
-            const weighted = {};
-            
-            PEN_KOMPONEN.forEach(komp => {
-                const i1 = document.getElementById(`pen-p1-${komp}`);
-                const i2 = document.getElementById(`pen-p2-${komp}`);
-                const i3 = document.getElementById(`pen-p3-${komp}`);
-                
-                let v1 = i1.value === "" ? null : validateInput(i1);
-                let v2 = i2.value === "" ? null : validateInput(i2);
-                let v3 = i3.value === "" ? null : validateInput(i3);
-
-                let sum = (v1 || 0) + (v2 || 0) + (v3 || 0);
-                
-                if (i1.value !== "" || i2.value !== "" || i3.value !== "") {
-                    let rataRata = sum / 3;
-                    avg[komp] = rataRata;
-                    weighted[komp] = rataRata * PEN_BOBOT[komp];
-                    
-                    document.getElementById(`pen-avg-${komp}`).textContent = rataRata.toFixed(2);
-                    let wEl = document.getElementById(`pen-weighted-${komp}`);
-                    wEl.textContent = weighted[komp].toFixed(2);
-                    wEl.classList.add('text-indigo-700');
-                } else {
-                    avg[komp] = 0;
-                    weighted[komp] = 0;
-                    document.getElementById(`pen-avg-${komp}`).textContent = '-';
-                    document.getElementById(`pen-weighted-${komp}`).textContent = '-';
-                }
-            });
-
-            const inputs = document.querySelectorAll('.input-pen');
-            const adaInput = Array.from(inputs).some(i => i.value !== "");
-            
-            if (adaInput) {
-                const total = PEN_KOMPONEN.reduce((sum, komp) => sum + weighted[komp], 0);
-                document.getElementById('pen-final-angka').textContent = total.toFixed(2);
-                document.getElementById('pen-final-huruf').textContent = konversiKeHuruf(total);
-                
-                const ket = getKeterangan(total);
-                const ketEl = document.getElementById('pen-final-keterangan');
-                ketEl.textContent = ket.text;
-                ketEl.className = `text-4xl font-extrabold mt-2 px-8 py-2 rounded-xl transition-all ${ket.class}`;
-            } else {
-                document.getElementById('pen-final-angka').textContent = '-';
-                document.getElementById('pen-final-huruf').textContent = '-';
-                document.getElementById('pen-final-keterangan').textContent = '-';
-                document.getElementById('pen-final-keterangan').className = "text-4xl font-extrabold text-gray-400 mt-2 px-8 py-2 rounded-xl transition-all";
-            }
-        }
-
-        function resetPendadaran() {
-            document.querySelectorAll('.input-pen').forEach(i => { i.value = ''; i.classList.remove('error'); });
-            hitungPendadaran();
-        }
-
-        // --- INIT EVENT LISTENERS ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Event Listener Pra-TA
-            document.querySelectorAll('.input-pra').forEach(input => {
-                input.addEventListener('input', hitungPraTA);
-                input.addEventListener('focus', function() { this.select(); });
-            });
-
-            // Event Listener Pendadaran
-            document.querySelectorAll('.input-pen').forEach(input => {
-                input.addEventListener('input', hitungPendadaran);
-                input.addEventListener('focus', function() { this.select(); });
-            });
-        });
     </script>
 </body>
-
 </html>
