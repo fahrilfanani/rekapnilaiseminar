@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rekap Penilaian Tugas Akhir Terpadu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,8 @@
             background-color: #ffffff;
             color: #1e293b; /* Slate 800 */
             overflow-x: hidden;
+            /* Prevent bounce on mobile */
+            overscroll-behavior-y: none; 
         }
 
         /* --- Radiant Mesh Background --- */
@@ -73,11 +75,13 @@
             border: 1px solid #e2e8f0;
             color: #0f172a;
             border-radius: 12px;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 0.5rem;
             transition: all 0.2s ease;
             text-align: center;
             font-weight: 600;
-            font-size: 1.125rem;
+            font-size: 1rem;
+            /* Prevent zoom on focus on iOS */
+            touch-action: manipulation; 
         }
         .modern-input:focus {
             background: #ffffff;
@@ -95,23 +99,25 @@
         /* --- Floating Dock (Light Mode) --- */
         .dock-container {
             position: fixed;
-            bottom: 2rem;
+            bottom: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.8);
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 9999px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
             z-index: 50;
+            max-width: 90vw;
+            overflow-x: auto;
         }
 
         .dock-item {
             position: relative;
-            padding: 0.75rem 1.25rem;
+            padding: 0.75rem 1rem;
             border-radius: 9999px;
             color: #64748b;
             font-weight: 600;
@@ -121,6 +127,7 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            white-space: nowrap;
         }
         
         .dock-item:hover {
@@ -161,9 +168,18 @@
         
         /* Custom Table Styling */
         th { font-weight: 600; letter-spacing: -0.01em; color: #64748b; }
+        
+        /* Mobile Scroll Snap for Horizontal Tables */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .overflow-x-auto::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col pb-32">
+<body class="min-h-screen flex flex-col pb-32 sm:pb-24">
 
     <!-- Radiant Background -->
     <div class="radiant-bg">
@@ -173,43 +189,43 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-12 flex-grow relative z-10">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 flex-grow relative z-10">
         
         <!-- ================= HOME VIEW ================= -->
-        <div id="home-view" class="fade-in max-w-5xl mx-auto py-10">
+        <div id="home-view" class="fade-in max-w-5xl mx-auto py-6 sm:py-10">
             <!-- Header Section -->
-            <div class="text-center mb-16 space-y-4">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-lg mb-4 text-orange-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="text-center mb-10 sm:mb-16 space-y-4">
+                <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-lg mb-2 sm:mb-4 text-orange-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
-                <h1 class="text-5xl sm:text-7xl font-bold tracking-tight text-slate-900">
+                <h1 class="text-4xl sm:text-7xl font-bold tracking-tight text-slate-900 leading-tight">
                     Rekap Penilaian<br/>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-indigo-500">Seminar & Pendadaran</span>
                 </h1>
-                <p class="text-xl text-slate-500 max-w-2xl mx-auto font-medium">Silakan pilih jenis sidang yang akan dinilai untuk memulai rekap perhitungan akhir</p>
+                <p class="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto font-medium px-4">Silakan pilih jenis sidang yang akan dinilai untuk memulai rekap perhitungan akhir</p>
             </div>
 
             <!-- Bento Grid Layout -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-2 sm:px-4">
                 
                 <!-- Pra-TA Card -->
-                <button onclick="switchView('prata')" class="group bento-card p-10 text-left relative overflow-hidden h-64 flex flex-col justify-between">
+                <button onclick="switchView('prata')" class="group bento-card p-6 sm:p-10 text-left relative overflow-hidden h-56 sm:h-64 flex flex-col justify-between">
                     <!-- Gradient Decor -->
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-orange-100 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-orange-200 transition-colors"></div>
+                    <div class="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-orange-100 rounded-full blur-3xl -mr-10 -mt-10 sm:-mr-16 sm:-mt-16 group-hover:bg-orange-200 transition-colors"></div>
                     
                     <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-3 sm:mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
-                        <h2 class="text-3xl font-bold text-slate-800 mb-2">Seminar Pra-TA</h2>
-                        <p class="text-slate-500 font-medium">Penilaian proposal dan kesiapan materi dasar.</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-1 sm:mb-2">Seminar Pra-TA</h2>
+                        <p class="text-sm sm:text-base text-slate-500 font-medium">Penilaian proposal dan kesiapan materi dasar.</p>
                     </div>
                     
-                    <div class="relative z-10 flex items-center text-sm font-bold text-orange-600">
+                    <div class="relative z-10 flex items-center text-xs sm:text-sm font-bold text-orange-600 tracking-wide">
                         MULAI SESI
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -218,21 +234,21 @@
                 </button>
 
                 <!-- Pendadaran Card -->
-                <button onclick="switchView('pendadaran')" class="group bento-card p-10 text-left relative overflow-hidden h-64 flex flex-col justify-between">
+                <button onclick="switchView('pendadaran')" class="group bento-card p-6 sm:p-10 text-left relative overflow-hidden h-56 sm:h-64 flex flex-col justify-between">
                     <!-- Gradient Decor -->
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-blue-200 transition-colors"></div>
+                    <div class="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-blue-100 rounded-full blur-3xl -mr-10 -mt-10 sm:-mr-16 sm:-mt-16 group-hover:bg-blue-200 transition-colors"></div>
                     
                     <div class="relative z-10">
-                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 sm:mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                             </svg>
                         </div>
-                        <h2 class="text-3xl font-bold text-slate-800 mb-2">Sidang Pendadaran</h2>
-                        <p class="text-slate-500 font-medium">Penilaian hasil akhir, produk, dan performa sidang.</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-1 sm:mb-2">Sidang Pendadaran</h2>
+                        <p class="text-sm sm:text-base text-slate-500 font-medium">Penilaian hasil akhir, produk, dan performa sidang.</p>
                     </div>
 
-                    <div class="relative z-10 flex items-center text-sm font-bold text-blue-600">
+                    <div class="relative z-10 flex items-center text-xs sm:text-sm font-bold text-blue-600 tracking-wide">
                         MULAI SESI
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -244,14 +260,14 @@
 
 
         <!-- ================= PRA-TA VIEW ================= -->
-        <div id="prata-view" class="hidden space-y-8 fade-in">
+        <div id="prata-view" class="hidden space-y-6 sm:space-y-8 fade-in">
             <!-- Header Row -->
-            <div class="flex flex-col md:flex-row justify-between items-end gap-4 mb-4 px-2">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-2 px-2">
                 <div>
-                    <h1 class="text-4xl font-bold text-slate-900 mb-1">Seminar Pra-TA</h1>
-                    <p class="text-slate-500 font-medium text-lg">Input Skor Evaluasi Proposal</p>
+                    <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-1">Seminar Pra-TA</h1>
+                    <p class="text-slate-500 font-medium text-base sm:text-lg">Input Skor Evaluasi Proposal</p>
                 </div>
-                <div id="prata-autosave" class="autosave-pill flex items-center gap-2 bg-white border border-emerald-100 text-emerald-600 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                <div id="prata-autosave" class="autosave-pill hidden sm:flex items-center gap-2 bg-white border border-emerald-100 text-emerald-600 px-4 py-2 rounded-full text-xs sm:text-sm font-bold shadow-sm">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Tersimpan Otomatis
                 </div>
@@ -259,25 +275,31 @@
 
             <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
                 <!-- Main Table Panel -->
-                <div class="xl:col-span-3 bento-card p-2 overflow-hidden bg-white/80">
-                    <div class="overflow-x-auto p-4">
-                        <table class="w-full text-left min-w-[800px]">
+                <div class="xl:col-span-3 bento-card p-0 sm:p-2 overflow-hidden bg-white/80">
+                    <div class="overflow-x-auto p-4 pb-2">
+                        <!-- Mobile Tip: Scrolling -->
+                        <div class="sm:hidden text-xs text-slate-400 text-center mb-2 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                            Geser tabel untuk input nilai
+                        </div>
+                        <table class="w-full text-left min-w-[650px] sm:min-w-[800px]">
                             <thead>
                                 <tr class="text-xs uppercase tracking-wider border-b border-slate-100">
-                                    <th class="p-4 w-48 sticky left-0 bg-white/95 backdrop-blur z-20">Komponen</th>
-                                    <th class="p-4 text-center text-orange-500">Format (10%)</th>
-                                    <th class="p-4 text-center text-orange-500">Substansi (30%)</th>
-                                    <th class="p-4 text-center text-orange-500">Materi (40%)</th>
-                                    <th class="p-4 text-center text-orange-500">Sikap (20%)</th>
+                                    <th class="p-3 sm:p-4 w-32 sm:w-48 sticky left-0 bg-white/95 backdrop-blur z-20 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Komponen</th>
+                                    <th class="p-3 sm:p-4 text-center text-orange-500">Format (10%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-orange-500">Substansi (30%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-orange-500">Materi (40%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-orange-500">Sikap (20%)</th>
                                 </tr>
                             </thead>
-                            <tbody id="prata-tbody" class="text-lg divide-y divide-slate-50">
+                            <tbody id="prata-tbody" class="text-base sm:text-lg divide-y divide-slate-50">
                                 <!-- Generated -->
                             </tbody>
                         </table>
                     </div>
-                    <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end">
-                        <button onclick="resetForm('prata')" class="text-sm text-slate-400 hover:text-red-500 font-semibold transition-colors flex items-center gap-1">
+                    <div class="px-4 sm:px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-between sm:justify-end items-center">
+                        <span class="sm:hidden text-xs text-emerald-600 font-medium" id="prata-mobile-save-status"></span>
+                        <button onclick="resetForm('prata')" class="text-sm text-slate-400 hover:text-red-500 font-semibold transition-colors flex items-center gap-1 ml-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                             </svg>
@@ -288,18 +310,18 @@
 
                 <!-- Score Panel -->
                 <div class="xl:col-span-1">
-                    <div class="bento-card p-8 text-center sticky top-8 bg-white/80">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Skor Akhir</p>
-                        <p id="prata-final-angka" class="text-7xl font-bold text-slate-900 mb-6 tracking-tight text-gradient-primary">-</p>
+                    <div class="bento-card p-6 sm:p-8 text-center sticky top-8 bg-white/80">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 sm:mb-4">Skor Akhir</p>
+                        <p id="prata-final-angka" class="text-6xl sm:text-7xl font-bold text-slate-900 mb-4 sm:mb-6 tracking-tight text-gradient-primary">-</p>
                         
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
-                                <p id="prata-final-huruf" class="text-2xl font-bold text-slate-800">-</p>
+                            <div class="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100">
+                                <p class="text-[10px] sm:text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
+                                <p id="prata-final-huruf" class="text-xl sm:text-2xl font-bold text-slate-800">-</p>
                             </div>
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
-                                <p id="prata-final-keterangan" class="text-lg font-bold text-slate-800">-</p>
+                            <div class="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100">
+                                <p class="text-[10px] sm:text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
+                                <p id="prata-final-keterangan" class="text-base sm:text-lg font-bold text-slate-800">-</p>
                             </div>
                         </div>
                     </div>
@@ -309,14 +331,14 @@
 
 
         <!-- ================= PENDADARAN VIEW ================= -->
-        <div id="pendadaran-view" class="hidden space-y-8 fade-in">
+        <div id="pendadaran-view" class="hidden space-y-6 sm:space-y-8 fade-in">
             <!-- Header Row -->
-             <div class="flex flex-col md:flex-row justify-between items-end gap-4 mb-4 px-2">
+             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mb-2 px-2">
                 <div>
-                    <h1 class="text-4xl font-bold text-slate-900 mb-1">Sidang Pendadaran</h1>
-                    <p class="text-slate-500 font-medium text-lg">Input Skor Akhir Skripsi</p>
+                    <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-1">Sidang Pendadaran</h1>
+                    <p class="text-slate-500 font-medium text-base sm:text-lg">Input Skor Akhir Skripsi</p>
                 </div>
-                <div id="pendadaran-autosave" class="autosave-pill flex items-center gap-2 bg-white border border-emerald-100 text-emerald-600 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                <div id="pendadaran-autosave" class="autosave-pill hidden sm:flex items-center gap-2 bg-white border border-emerald-100 text-emerald-600 px-4 py-2 rounded-full text-xs sm:text-sm font-bold shadow-sm">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     Tersimpan Otomatis
                 </div>
@@ -324,26 +346,32 @@
 
             <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
                 <!-- Main Table Panel -->
-                <div class="xl:col-span-3 bento-card p-2 overflow-hidden bg-white/80">
-                    <div class="overflow-x-auto p-4">
-                        <table class="w-full text-left min-w-[800px]">
+                <div class="xl:col-span-3 bento-card p-0 sm:p-2 overflow-hidden bg-white/80">
+                    <div class="overflow-x-auto p-4 pb-2">
+                        <!-- Mobile Tip -->
+                        <div class="sm:hidden text-xs text-slate-400 text-center mb-2 flex items-center justify-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                            Geser tabel untuk input nilai
+                        </div>
+                        <table class="w-full text-left min-w-[650px] sm:min-w-[800px]">
                             <thead>
                                 <tr class="text-xs uppercase tracking-wider border-b border-slate-100">
-                                    <th class="p-4 w-48 sticky left-0 bg-white/95 backdrop-blur z-20">Komponen</th>
-                                    <th class="p-4 text-center text-blue-500">Format (10%)</th>
-                                    <th class="p-4 text-center text-blue-500">Substansi (20%)</th>
-                                    <th class="p-4 text-center text-blue-500">Materi (30%)</th>
-                                    <th class="p-4 text-center text-blue-500">Sikap (20%)</th>
-                                    <th class="p-4 text-center text-blue-500">Hasil (20%)</th>
+                                    <th class="p-3 sm:p-4 w-32 sm:w-48 sticky left-0 bg-white/95 backdrop-blur z-20 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Komponen</th>
+                                    <th class="p-3 sm:p-4 text-center text-blue-500">Format (10%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-blue-500">Substansi (20%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-blue-500">Materi (30%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-blue-500">Sikap (20%)</th>
+                                    <th class="p-3 sm:p-4 text-center text-blue-500">Hasil (20%)</th>
                                 </tr>
                             </thead>
-                            <tbody id="pendadaran-tbody" class="text-lg divide-y divide-slate-50">
+                            <tbody id="pendadaran-tbody" class="text-base sm:text-lg divide-y divide-slate-50">
                                 <!-- Generated -->
                             </tbody>
                         </table>
                     </div>
-                     <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end">
-                        <button onclick="resetForm('pendadaran')" class="text-sm text-slate-400 hover:text-red-500 font-semibold transition-colors flex items-center gap-1">
+                     <div class="px-4 sm:px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-between sm:justify-end items-center">
+                        <span class="sm:hidden text-xs text-emerald-600 font-medium" id="pendadaran-mobile-save-status"></span>
+                        <button onclick="resetForm('pendadaran')" class="text-sm text-slate-400 hover:text-red-500 font-semibold transition-colors flex items-center gap-1 ml-auto">
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                             </svg>
@@ -354,18 +382,18 @@
 
                 <!-- Score Panel -->
                 <div class="xl:col-span-1">
-                    <div class="bento-card p-8 text-center sticky top-8 bg-white/80">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Skor Akhir</p>
-                        <p id="pendadaran-final-angka" class="text-7xl font-bold text-slate-900 mb-6 tracking-tight text-gradient-secondary">-</p>
+                    <div class="bento-card p-6 sm:p-8 text-center sticky top-8 bg-white/80">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 sm:mb-4">Skor Akhir</p>
+                        <p id="pendadaran-final-angka" class="text-6xl sm:text-7xl font-bold text-slate-900 mb-4 sm:mb-6 tracking-tight text-gradient-secondary">-</p>
                         
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
-                                <p id="pendadaran-final-huruf" class="text-2xl font-bold text-slate-800">-</p>
+                            <div class="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100">
+                                <p class="text-[10px] sm:text-xs text-slate-400 uppercase font-bold mb-1">Huruf</p>
+                                <p id="pendadaran-final-huruf" class="text-xl sm:text-2xl font-bold text-slate-800">-</p>
                             </div>
-                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                                <p class="text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
-                                <p id="pendadaran-final-keterangan" class="text-lg font-bold text-slate-800">-</p>
+                            <div class="bg-slate-50 rounded-2xl p-3 sm:p-4 border border-slate-100">
+                                <p class="text-[10px] sm:text-xs text-slate-400 uppercase font-bold mb-1">Status</p>
+                                <p id="pendadaran-final-keterangan" class="text-base sm:text-lg font-bold text-slate-800">-</p>
                             </div>
                         </div>
                     </div>
@@ -428,28 +456,28 @@
 
             for(let i=1; i<=3; i++) {
                 html += `<tr class="hover:bg-slate-50 transition-colors group">
-                    <td class="p-4 font-semibold text-slate-700 sticky left-0 bg-white group-hover:bg-slate-50 z-10 border-r border-slate-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-${conf.color}-50 text-${conf.color}-600 flex items-center justify-center text-xs font-bold">P${i}</div>
-                            <span>Penguji ${i}</span>
+                    <td class="p-3 sm:p-4 font-semibold text-slate-700 sticky left-0 bg-white group-hover:bg-slate-50 z-10 border-r border-slate-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-${conf.color}-50 text-${conf.color}-600 flex items-center justify-center text-[10px] sm:text-xs font-bold">P${i}</div>
+                            <span class="text-sm sm:text-base">Penguji ${i}</span>
                         </div>
                     </td>`;
                 
                 conf.komponen.forEach(k => {
-                    html += `<td class="p-2"><input type="number" min="0" max="100" id="${type}-p${i}-${k}" class="modern-input w-full" placeholder="0" oninput="hitung('${type}')"></td>`;
+                    html += `<td class="p-2"><input type="number" min="0" max="100" id="${type}-p${i}-${k}" class="modern-input w-full text-sm sm:text-base" placeholder="0" oninput="hitung('${type}')"></td>`;
                 });
                 html += `</tr>`;
             }
 
             // Summary
-            html += `<tr class="bg-slate-50/50 font-bold text-slate-500 border-t border-slate-100">
-                <td class="p-4 sticky left-0 bg-slate-50/90 backdrop-blur z-10 border-r border-slate-100">Rata-rata</td>`;
-            conf.komponen.forEach(k => html += `<td class="p-4 text-center text-${conf.color}-600" id="${type}-avg-${k}">-</td>`);
+            html += `<tr class="bg-slate-50/50 font-bold text-slate-500 border-t border-slate-100 text-sm sm:text-base">
+                <td class="p-3 sm:p-4 sticky left-0 bg-slate-50/90 backdrop-blur z-10 border-r border-slate-100">Rata-rata</td>`;
+            conf.komponen.forEach(k => html += `<td class="p-3 sm:p-4 text-center text-${conf.color}-600" id="${type}-avg-${k}">-</td>`);
             html += `</tr>`;
 
-            html += `<tr class="bg-${conf.color}-50/30 text-${conf.color}-600 font-bold border-t border-slate-100">
-                <td class="p-4 sticky left-0 bg-white/90 backdrop-blur z-10 border-r border-slate-100">Nilai x Bobot</td>`;
-            conf.komponen.forEach(k => html += `<td class="p-4 text-center" id="${type}-weighted-${k}">-</td>`);
+            html += `<tr class="bg-${conf.color}-50/30 text-${conf.color}-600 font-bold border-t border-slate-100 text-sm sm:text-base">
+                <td class="p-3 sm:p-4 sticky left-0 bg-white/90 backdrop-blur z-10 border-r border-slate-100">Nilai x Bobot</td>`;
+            conf.komponen.forEach(k => html += `<td class="p-3 sm:p-4 text-center" id="${type}-weighted-${k}">-</td>`);
             html += `</tr>`;
 
             tbody.innerHTML = html;
@@ -478,12 +506,23 @@
         }
 
         function showAutosaveIndicator(type) {
+            // Desktop
             const indicator = document.getElementById(`${type}-autosave`);
             if (indicator) {
                 indicator.classList.add('visible');
                 clearTimeout(indicator.timeout);
                 indicator.timeout = setTimeout(() => {
                     indicator.classList.remove('visible');
+                }, 1500);
+            }
+            
+            // Mobile Text
+            const mobileStatus = document.getElementById(`${type}-mobile-save-status`);
+            if(mobileStatus) {
+                mobileStatus.textContent = "Tersimpan";
+                clearTimeout(mobileStatus.timeout);
+                mobileStatus.timeout = setTimeout(() => {
+                    mobileStatus.textContent = "";
                 }, 1500);
             }
         }
@@ -573,9 +612,9 @@
             if(score === null) {
                 elAngka.textContent = '-';
                 elHuruf.textContent = '-';
-                elHuruf.className = "text-2xl font-bold text-slate-400";
+                elHuruf.className = "text-xl sm:text-2xl font-bold text-slate-400";
                 elKet.textContent = '-';
-                elKet.className = "text-xl font-bold text-slate-400";
+                elKet.className = "text-base sm:text-xl font-bold text-slate-400";
                 return;
             }
 
@@ -586,13 +625,13 @@
             elKet.textContent = isLulus ? "LULUS" : "TIDAK LULUS";
             
             if(isLulus) {
-                elKet.className = "text-lg font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100";
-                elHuruf.className = "text-2xl font-bold text-emerald-600";
+                elKet.className = "text-sm sm:text-lg font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100";
+                elHuruf.className = "text-xl sm:text-2xl font-bold text-emerald-600";
                 elAngka.classList.remove('text-slate-900', 'text-rose-500');
                 elAngka.classList.add(type === 'prata' ? 'text-gradient-primary' : 'text-gradient-secondary');
             } else {
-                elKet.className = "text-lg font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-lg border border-rose-100";
-                elHuruf.className = "text-2xl font-bold text-rose-600";
+                elKet.className = "text-sm sm:text-lg font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-lg border border-rose-100";
+                elHuruf.className = "text-xl sm:text-2xl font-bold text-rose-600";
                 elAngka.classList.remove('text-gradient-primary', 'text-gradient-secondary');
                 elAngka.classList.add('text-rose-500');
             }
