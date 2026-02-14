@@ -40,6 +40,15 @@
 
         .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+
+        /* Toast Autosave */
+        .autosave-indicator {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .autosave-indicator.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="text-slate-600 min-h-screen py-8 px-4 sm:px-6 lg:px-8 flex flex-col">
@@ -55,7 +64,7 @@
                     </svg>
                 </div>
                 <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-800 tracking-tight">Rekap Penilaian <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Seminar & Pendadaran</span></h1>
-                <p class="text-lg text-slate-500 max-w-xl mx-auto">Silakan pilih jenis sidang yang akan dinilai untuk memulai rekap perhitungan akhir.</p>
+                <p class="text-lg text-slate-500 max-w-xl mx-auto">Silakan pilih jenis sidang yang akan dinilai untuk memulai perhitungan skor.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4">
@@ -124,7 +133,15 @@
                 <!-- Input Table -->
                 <div class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                        <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                            <span id="prata-autosave" class="autosave-indicator text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                Tersimpan
+                            </span>
+                        </div>
                         <button onclick="resetForm('prata')" class="text-sm text-slate-400 hover:text-red-500 font-medium transition-colors">Reset Form</button>
                     </div>
                     <div class="overflow-x-auto">
@@ -188,7 +205,15 @@
                 <!-- Input Table -->
                 <div class="xl:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                     <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                        <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">Input Nilai</h2>
+                            <span id="pendadaran-autosave" class="autosave-indicator text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                Tersimpan
+                            </span>
+                        </div>
                         <button onclick="resetForm('pendadaran')" class="text-sm text-slate-400 hover:text-red-500 font-medium transition-colors">Reset Form</button>
                     </div>
                     <div class="overflow-x-auto">
@@ -252,10 +277,13 @@
             }
         };
 
+        const STORAGE_KEY = 'sistem_penilaian_ta_data';
+
         // --- INIT & RENDER ---
         document.addEventListener('DOMContentLoaded', () => {
             renderTable('prata');
             renderTable('pendadaran');
+            loadData(); // Load data from local storage
         });
 
         function renderTable(type) {
@@ -293,6 +321,47 @@
             tbody.innerHTML = html;
         }
 
+        // --- AUTOSAVE LOGIC ---
+        function saveData() {
+            const data = {};
+            // Ambil semua input yang memiliki class input-nilai
+            const inputs = document.querySelectorAll('.input-nilai');
+            inputs.forEach(input => {
+                if (input.value) {
+                    data[input.id] = input.value;
+                }
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                for (const [id, value] of Object.entries(data)) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.value = value;
+                    }
+                }
+                // Recalculate everything after loading
+                hitung('prata', false); // false = jangan show indikator save saat load
+                hitung('pendadaran', false);
+            }
+        }
+
+        function showAutosaveIndicator(type) {
+            const indicator = document.getElementById(`${type}-autosave`);
+            if (indicator) {
+                indicator.classList.add('visible');
+                // Sembunyikan lagi setelah 1.5 detik
+                if(indicator.timeout) clearTimeout(indicator.timeout);
+                indicator.timeout = setTimeout(() => {
+                    indicator.classList.remove('visible');
+                }, 1500);
+            }
+        }
+
         // --- NAVIGATION ---
         function switchView(viewName) {
             document.getElementById('home-view').classList.add('hidden');
@@ -313,7 +382,7 @@
         }
 
         // --- CALCULATION LOGIC ---
-        function hitung(type) {
+        function hitung(type, triggerSave = true) {
             const conf = CONFIG[type];
             const avg = {};
             const weighted = {};
@@ -366,6 +435,12 @@
             });
 
             updateResultUI(type, isComplete ? finalScore : null);
+            
+            // Save data only if user triggered input
+            if(triggerSave) {
+                saveData();
+                showAutosaveIndicator(type);
+            }
         }
 
         function updateResultUI(type, score) {
@@ -405,11 +480,14 @@
         }
 
         function resetForm(type) {
-            const inputs = document.querySelectorAll(`input[id^="${type}-"]`);
-            inputs.forEach(i => i.value = '');
-            hitung(type);
+            // Confirm reset
+            if(confirm("Apakah Anda yakin ingin mereset formulir ini? Semua data yang tersimpan akan dihapus.")) {
+                const inputs = document.querySelectorAll(`input[id^="${type}-"]`);
+                inputs.forEach(i => i.value = '');
+                // Recalculate and trigger save to clear storage for these fields
+                hitung(type, true);
+            }
         }
     </script>
 </body>
 </html>
-
